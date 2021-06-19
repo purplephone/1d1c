@@ -1,42 +1,27 @@
 package main
 
 import (
-	"bufio"
 	"os"
-	"strconv"
+	"strings"
+
+	"github.com/labstack/echo"
+	"github.com/purplephone/learngo/scrapper"
 )
 
-var sum int
+func handleHome(c echo.Context) error {
+	return c.File("home.html")
+}
+
+func handleScrape(c echo.Context) error {
+	defer os.Remove("jobs.csv")
+	term := strings.ToLower(scrapper.CleanString(c.FormValue("term")))
+	scrapper.Scrape(term)
+	return c.Attachment("jobs.csv", "jobs.csv")
+}
 
 func main() {
-	sc := bufio.NewScanner(os.Stdin)
-	wr := bufio.NewWriter(os.Stdout)
-	defer wr.Flush()
-	sc.Scan()
-	n := nextInt(sc.Text())
-	for i := 0; i < n; i++ {
-		sc.Scan()
-		a := nextInt(sc.Text())
-		sum = 0
-		recur(a, 0)
-		wr.WriteString(strconv.Itoa(sum) + "\n")
-	}
-}
-
-func recur(a, x int) {
-	if x > a {
-		return
-	}
-	if x == a {
-		sum++
-		return
-	}
-	for i := 1; i <= 3; i++ {
-		recur(a, x+i)
-	}
-}
-
-func nextInt(str string) int {
-	ret, _ := strconv.Atoi(str)
-	return ret
+	e := echo.New()
+	e.GET("/", handleHome)
+	e.POST("/scrape", handleScrape)
+	e.Logger.Fatal(e.Start(":1323"))
 }
