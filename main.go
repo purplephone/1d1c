@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"os"
 	"strings"
 
@@ -20,8 +21,11 @@ func handleScrape(c echo.Context) error {
 }
 
 func main() {
-	e := echo.New()
+	/*e := echo.New()
 	e.GET("/", handleHome)
 	e.POST("/scrape", handleScrape)
-	e.Logger.Fatal(e.Start(":1323"))
+	e.Logger.Fatal(e.Start(":1323"))*/
+	sc := bufio.NewScanner(os.Stdin)
+	sc.Scan()
+	scrapper.Scrape(sc.Text())
 }

@@ -1,12 +1,9 @@
 package scrapper
 
 import (
-	"encoding/csv"
 	"fmt"
 	"log"
 	"net/http"
-	"os"
-	"strconv"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
@@ -20,93 +17,38 @@ type extractedJob struct {
 	summary  string
 }
 
-var baseURL string
+var baseURL string = "https://www.acmicpc.net/problem/"
 
-func Scrape(term string) {
-	var jobs []extractedJob
-	baseURL = "https://kr.indeed.com/%EC%B7%A8%EC%97%85?q=" + term + "&limit=50"
-	ch := make(chan []extractedJob)
-	totalPages := getPages()
+//baekjun problem scrape
+func Scrape(num string) {
+	//set URL
+	URL := baseURL + num
 
-	for i := 0; i < totalPages; i++ {
-		go getPage(i, ch)
-	}
-	for i := 0; i < totalPages; i++ {
-		extractedJobs := <-ch
-		jobs = append(jobs, extractedJobs...)
-		writeJobs(jobs)
-	}
-	fmt.Println("Done, extracted", len(jobs))
-}
-
-func writeJobs(jobs []extractedJob) {
-	file, err := os.Create("jobs.csv")
-	checkErr(err)
-
-	w := csv.NewWriter(file)
-	defer w.Flush()
-
-	headers := []string{"ID", "Title", "Location", "Salary", "Summary"}
-	wErr := w.Write(headers)
-	checkErr(wErr)
-
-	for _, job := range jobs {
-		jobSlice := []string{"http://kr.indeed.com/viewjob?jk=" + job.id, job.title, job.location, job.salary, job.summary}
-		wErr := w.Write(jobSlice)
-		checkErr(wErr)
-	}
-}
-
-func getPage(page int, ch chan<- []extractedJob) {
-	var jobs []extractedJob
-	c := make(chan extractedJob)
-	pageURL := baseURL + "&start=" + strconv.Itoa(page*50)
-	fmt.Println("Checking :", pageURL)
-	res, err := http.Get(pageURL)
+	//Request the HTML page
+	res, err := http.Get(URL)
 	checkErr(err)
 	checkCode(res)
-
 	defer res.Body.Close()
+	if res.StatusCode != 200 {
+		log.Fatalf("Status code error: %d %s", res.StatusCode, res.Status)
+	}
+
+	//Load the HTML document
 	doc, err := goquery.NewDocumentFromReader(res.Body)
 	checkErr(err)
 
-	searchCards := doc.Find(".jobsearch-SerpJobCard")
-	searchCards.Each(func(i int, card *goquery.Selection) {
-		go extractJob(card, c)
+	//Find the items
+	doc.Find("#problem-body").Each(func(i int, s *goquery.Selection) {
+		description := s.Find("#problem_description").Text()
+		input := s.Find("#problem_input").Text()
+		output := s.Find("#problem_output").Text()
+		description = strings.TrimSpace(description)
+		input = strings.TrimSpace(input)
+		output = strings.TrimSpace(output)
+		fmt.Println("문제\n" + description)
+		fmt.Println("입력\n" + input)
+		fmt.Println("출력\n" + output)
 	})
-
-	for i := 0; i < searchCards.Length(); i++ {
-		jobs = append(jobs, <-c)
-	}
-	ch <- jobs
-}
-
-func extractJob(card *goquery.Selection, c chan<- extractedJob) {
-	id, _ := card.Attr("data-jk")
-	title := CleanString(card.Find(".title>a").Text())
-	location := CleanString(card.Find(".sjcl").Text())
-	salary := CleanString(card.Find(".salaryText").Text())
-	summary := CleanString(card.Find(".summary").Text())
-	c <- extractedJob{
-		id:       id,
-		title:    title,
-		location: location,
-		salary:   salary,
-		summary:  summary}
-}
-
-func getPages() (pages int) {
-	res, err := http.Get(baseURL)
-	checkErr(err)
-	checkCode(res)
-
-	defer res.Body.Close()
-
-	doc, err := goquery.NewDocumentFromReader(res.Body)
-	doc.Find(".pagination").Each(func(i int, s *goquery.Selection) {
-		pages = (s.Find("a").Length())
-	})
-	return
 }
 
 func checkErr(err error) {
