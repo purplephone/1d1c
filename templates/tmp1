@@ -13,5 +13,19 @@
         <input placeholder="what number do u want" name="term">
         <button>Search</button>
     </form>
+    <div>
+        <h3>문제</h3>
+        <p>
+	    	{{.Description}}
+        </p>
+    	<h3>입력</h3>
+    	<p>
+         	{{.Input}}
+        </p>
+    	<h3>출력</h3>
+        <p>
+    		{{.Output}}
+    	</p>
+    </div>
 </body>
 </html>

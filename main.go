@@ -16,25 +16,23 @@ func handleHome(c echo.Context) error {
 }
 
 func handleScrape(c echo.Context) error {
+	err := os.Remove("scrape.html")
+	checkErr(err)
 	term = strings.ToLower(scrapper.CleanString(c.FormValue("term")))
-
-	return process()
+	err1 := process()
+	checkErr(err1)
+	return c.File("scrape.html")
 }
 
 func process() error {
+	file, err := os.Create("scrape.html")
+	defer file.Close()
+	checkErr(err)
+	//wr := io.Writer(file)
 	str := scrapper.Scrape(term)
-	const tmp1 = `문제
-	{{.Description}}
-	입력
-	{{.Input}}
-	출력
-	{{.Output}}
-	`
-	t, err := template.New("t1").Parse(tmp1)
-	if err != nil {
-		panic(err)
-	}
-	return t.Execute(os.Stdout, str)
+	tmp1, err1 := template.New("tmp1").ParseFiles("templates/tmp1")
+	checkErr(err1)
+	return tmp1.ExecuteTemplate(file, "tmp1", str)
 }
 
 func main() {
@@ -42,4 +40,10 @@ func main() {
 	e.GET("/", handleHome)
 	e.POST("/scrape", handleScrape)
 	e.Logger.Fatal(e.Start(":1323"))
+}
+
+func checkErr(err error) {
+	if err != nil {
+		panic(err)
+	}
 }
