@@ -1,0 +1,39 @@
+nav{
+    color: darkslategrey;
+    background-color: sandybrown;
+    width: 100%;
+}
+
+nav >div{
+    margin: 10px;
+    display: inline-block;
+}
+
+.menu_bar{
+    float: right;
+}
+
+.menu_bar>img{
+    display: inline-block;
+}
+
+.menues>ul{
+    list-style: none;
+    display: inline-block;
+}
+
+.menues>ul>li{
+    margin: 10px;
+    display: inline-block;
+}
+
+.title{
+    font-size: 30px;
+    font-family: "나눔고딕","Arial","Times New Roman";
+    display: inline-block;
+}
+
+footer{
+    font-size: 13px;
+    text-align: center;
+}

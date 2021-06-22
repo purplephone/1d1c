@@ -9,26 +9,23 @@ import (
 	"github.com/purplephone/learngo/scrapper"
 )
 
-var term string
-
 func handleHome(c echo.Context) error {
-	return c.File("home.html")
+	return c.File("pages/baek.html")
 }
 
 func handleScrape(c echo.Context) error {
-	err := os.Remove("scrape.html")
-	checkErr(err)
-	term = strings.ToLower(scrapper.CleanString(c.FormValue("term")))
-	err1 := process()
+	term := strings.ToLower(scrapper.CleanString(c.FormValue("term")))
+	err1 := tmp_problem(term)
 	checkErr(err1)
-	return c.File("scrape.html")
+	return c.File("pages/scrape.html")
 }
 
-func process() error {
-	file, err := os.Create("scrape.html")
-	defer file.Close()
+func tmp_problem(term string) error {
+	err := os.Remove("pages/scrape.html")
 	checkErr(err)
-	//wr := io.Writer(file)
+	file, err := os.Create("pages/scrape.html")
+	checkErr(err)
+	defer file.Close()
 	str := scrapper.Scrape(term)
 	tmp1, err1 := template.New("tmp1").ParseFiles("templates/tmp1")
 	checkErr(err1)
