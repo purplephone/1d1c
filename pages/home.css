@@ -1,39 +1,87 @@
+body{
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+}
+
+a{
+    text-decoration: none;
+    color: white;
+}
+
 nav{
-    color: darkslategrey;
-    background-color: sandybrown;
-    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color:mediumslateblue;
+    padding:  8px 12px;
 }
 
-nav >div{
-    margin: 10px;
-    display: inline-block;
-}
-
-.menu_bar{
-    float: right;
-}
-
-.menu_bar>img{
-    display: inline-block;
-}
-
-.menues>ul{
-    list-style: none;
-    display: inline-block;
-}
-
-.menues>ul>li{
-    margin: 10px;
-    display: inline-block;
-}
-
-.title{
+.nav_logo{
     font-size: 30px;
-    font-family: "나눔고딕","Arial","Times New Roman";
-    display: inline-block;
+    color: white;
+}
+
+.nav_logo>i{
+    color: green;
+}
+
+.nav_menu{
+    display: flex;
+    list-style: none;
+    padding-left: 0;
+}
+
+.nav_menu>li{
+    padding: 8px 12px;
+}
+
+.nav_icon {
+    list-style: none;
+    color: white;
+    display: flex;
+    padding: 8px 12px;
+    font-size : 18px;
+}
+
+.nav_icon>i{
+    margin :12px;
+}
+
+.nav_toggleBtn{
+    display: none;
+    position: absolute;
+    right: 32px;
+    font-size: 24px;
 }
 
 footer{
+    width: 100%;
+    position: absolute;
+    bottom: 5%;
     font-size: 13px;
-    text-align: center;
+}
+
+@media screen and (max-width: 700px) {
+    nav {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .nav_menu{
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+    .nav_menu>li{
+        width: 100%;
+        text-align: center;
+        padding: 8px 12px;
+    }
+    .nav_icon {
+        padding: 0;
+        justify-content: center;
+        width: 100%;
+    }
+    .nav_toggleBtn{
+        display: block;
+    }
 }
