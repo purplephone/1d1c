@@ -55,9 +55,10 @@ nav{
 }
 
 footer{
+    text-align: center;
     width: 100%;
     position: absolute;
-    bottom: 5%;
+    bottom: 1%;
     font-size: 13px;
 }
 

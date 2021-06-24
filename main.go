@@ -1,6 +1,7 @@
 package main
 
 import (
+	"net/http"
 	"os"
 	"strings"
 	"text/template"
@@ -9,34 +10,52 @@ import (
 	"github.com/purplephone/learngo/scrapper"
 )
 
-func handleHome(c echo.Context) error {
-	return c.File("pages/baek.html")
+func handleHome(w http.ResponseWriter, r *http.Request) {
+	fs := template.Must(template.ParseFiles("assets/home.html"))
+	fs.Execute(w, nil)
 }
 
-func handleScrape(c echo.Context) error {
-	term := strings.ToLower(scrapper.CleanString(c.FormValue("term")))
-	err1 := tmp_problem(term)
-	checkErr(err1)
-	return c.File("pages/scrape.html")
+func handleBaek(w http.ResponseWriter, r *http.Request) {
+	fs := template.Must(template.ParseFiles("assets/baek.html"))
+	fs.Execute(w, nil)
 }
 
-func tmp_problem(term string) error {
-	err := os.Remove("pages/scrape.html")
+func handleScrape(w http.ResponseWriter, r *http.Request) {
+	term := strings.ToLower(scrapper.CleanString(r.FormValue("term")))
+	if term == "" {
+		fs := template.Must(template.ParseFiles("assets/baek.html"))
+		fs.Execute(w, nil)
+	} else {
+		tmp_problem(term)
+		fs := template.Must(template.ParseFiles("assets/scrape.html"))
+		fs.Execute(w, nil)
+	}
+}
+
+func handleGetScrape(c echo.Context) error {
+	return c.File("assets/scrape.html")
+}
+
+func tmp_problem(term string) {
+	err := os.Remove("assets/scrape.html")
 	checkErr(err)
-	file, err := os.Create("pages/scrape.html")
+	file, err := os.Create("assets/scrape.html")
 	checkErr(err)
 	defer file.Close()
 	str := scrapper.Scrape(term)
 	tmp1, err1 := template.New("tmp1").ParseFiles("templates/tmp1")
 	checkErr(err1)
-	return tmp1.ExecuteTemplate(file, "tmp1", str)
+	err2 := tmp1.ExecuteTemplate(file, "tmp1", str)
+	checkErr(err2)
+
 }
 
 func main() {
-	e := echo.New()
-	e.GET("/", handleHome)
-	e.POST("/scrape", handleScrape)
-	e.Logger.Fatal(e.Start(":1323"))
+	http.HandleFunc("/", handleHome)
+	http.HandleFunc("/baek", handleBaek)
+	http.HandleFunc("/scrape", handleScrape)
+	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("assets/css"))))
+	http.ListenAndServe(":1324", nil)
 }
 
 func checkErr(err error) {
