@@ -6,7 +6,6 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/labstack/echo"
 	"github.com/purplephone/learngo/scrapper"
 )
 
@@ -30,10 +29,6 @@ func handleScrape(w http.ResponseWriter, r *http.Request) {
 		fs := template.Must(template.ParseFiles("assets/scrape.html"))
 		fs.Execute(w, nil)
 	}
-}
-
-func handleGetScrape(c echo.Context) error {
-	return c.File("assets/scrape.html")
 }
 
 func tmp_problem(term string) {
