@@ -46,11 +46,12 @@ func tmp_problem(term string) {
 }
 
 func main() {
-	http.HandleFunc("/", handleHome)
+	/*http.HandleFunc("/", handleHome)
 	http.HandleFunc("/baek", handleBaek)
 	http.HandleFunc("/scrape", handleScrape)
 	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("assets/css"))))
-	http.ListenAndServe(":1324", nil)
+	http.ListenAndServe(":1324", nil)*/
+	Check_Robots()
 }
 
 func checkErr(err error) {

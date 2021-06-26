@@ -25,7 +25,7 @@ func Scrape(num string) Baek {
 
 	//Request the HTML page
 	res, err := http.Get(URL)
-	checkErr(err)
+	CheckErr(err)
 	checkCode(res)
 	defer res.Body.Close()
 	if res.StatusCode != 200 {
@@ -34,7 +34,7 @@ func Scrape(num string) Baek {
 
 	//Load the HTML document
 	doc, err := goquery.NewDocumentFromReader(res.Body)
-	checkErr(err)
+	CheckErr(err)
 
 	var b Baek
 	//Find the items
@@ -51,7 +51,7 @@ func Scrape(num string) Baek {
 
 func writeBaek(b Baek) {
 	file, err := os.Create("baekjun.hwp")
-	checkErr(err)
+	CheckErr(err)
 	defer file.Close()
 
 	w := bufio.NewWriter(file)
@@ -59,10 +59,10 @@ func writeBaek(b Baek) {
 
 	ba := "문제\n" + b.Description + "\n\n입력\n" + b.Input + "\n\n출력\n" + b.Output
 	_, wErr := w.WriteString(ba)
-	checkErr(wErr)
+	CheckErr(wErr)
 }
 
-func checkErr(err error) {
+func CheckErr(err error) {
 	if err != nil {
 		log.Fatalln(err)
 	}
