@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"net/http"
 	"os"
 	"strings"
@@ -8,6 +9,8 @@ import (
 
 	"github.com/purplephone/learngo/scrapper"
 )
+
+var myLogger *log.Logger
 
 func handleHome(w http.ResponseWriter, r *http.Request) {
 	fs := template.Must(template.ParseFiles("assets/home.html"))
@@ -42,16 +45,22 @@ func tmp_problem(term string) {
 	checkErr(err1)
 	err2 := tmp1.ExecuteTemplate(file, "tmp1", str)
 	checkErr(err2)
-
 }
 
 func main() {
-	/*http.HandleFunc("/", handleHome)
+	fpLog, err := os.OpenFile("log.txt", os.O_CREATE|os.O_WRONLY, 0666)
+	checkErr(err)
+	defer fpLog.Close()
+	myLogger = log.New(fpLog, "", log.LstdFlags)
+	myLogger.Print("Test log")
+
+	http.HandleFunc("/", handleHome)
 	http.HandleFunc("/baek", handleBaek)
 	http.HandleFunc("/scrape", handleScrape)
 	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("assets/css"))))
-	http.ListenAndServe(":1324", nil)*/
-	Check_Robots()
+	http.ListenAndServe(":1324", nil)
+
+	//Check_Robots()
 }
 
 func checkErr(err error) {

@@ -22,6 +22,6 @@ func Check_Robots() {
 	checkErr(err)
 
 	doc.Find("body").Each(func(i int, s *goquery.Selection) {
-		fmt.Println(s.Find("pre"))
+		fmt.Println(s.Find(""))
 	})
 }
