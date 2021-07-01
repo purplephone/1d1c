@@ -11,3 +11,6 @@ https://galid1.tistory.com/793
 cloud computing
 https://www.youtube.com/watch?v=BeAMq6TgGus
 https://trevellyan.biz/hosted-vs-self-hosted/
+
+edge computing
+https://www.youtube.com/watch?v=cEOUeItHDdo
