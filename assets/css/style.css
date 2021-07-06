@@ -21,7 +21,7 @@ nav{
     color: white;
 }
 
-.nav_logo>i{
+.nav_logo i{
     color: green;
 }
 
@@ -31,7 +31,7 @@ nav{
     padding-left: 0;
 }
 
-.nav_menu>li{
+.nav_menu li{
     padding: 8px 12px;
 }
 
@@ -43,8 +43,13 @@ nav{
     font-size : 18px;
 }
 
-.nav_icon>i{
+.nav_icon i{
     margin :12px;
+}
+
+.nav_icon a{
+    margin: 12px;
+    font-size: 14px;
 }
 
 .nav_toggleBtn{
@@ -60,6 +65,7 @@ footer{
     position: absolute;
     bottom: 1%;
     font-size: 13px;
+    margin: 0;
 }
 
 @media screen and (max-width: 700px) {
@@ -68,21 +74,27 @@ footer{
         align-items: flex-start;
     }
     .nav_menu{
+        display: none;
         flex-direction: column;
         align-items: center;
         width: 100%;
     }
-    .nav_menu>li{
+    .nav_menu li{
         width: 100%;
         text-align: center;
         padding: 8px 12px;
     }
     .nav_icon {
+        display: none;
         padding: 0;
         justify-content: center;
         width: 100%;
     }
     .nav_toggleBtn{
         display: block;
+    }
+    .nav_menu.active,
+    .nav_icon.active{
+        display: flex;
     }
 }

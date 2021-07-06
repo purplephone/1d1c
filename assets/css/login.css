@@ -1,0 +1,19 @@
+.login{
+    border: 1px solid black;
+    text-align: center;
+    width: 300px;
+    margin: 12px;
+    padding: 22px;
+    border-radius: 1rem;
+}
+
+.wrap{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+}
+
+.wrap.active{
+    min-height: 10vh;
+}
